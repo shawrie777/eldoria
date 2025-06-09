@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   color="black"
+   width="330mm"
+   height="180mm"
+   viewBox="0 0 330 180.00001"
+   version="1.1"
+   id="svg1"
+   xml:space="preserve"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+   <defs
+     id="defs1">
+     <color-profile
+       name="Agfa-:-Swop-Standard"
+       xlink:href="../../WINDOWS/system32/spool/drivers/color/RSWOP.icm"
+       id="color-profile3" /><color-profile
+       name="sRGB-IEC61966-2.1"
+       xlink:href="../../WINDOWS/system32/spool/drivers/color/sRGB%20Color%20Space%20Profile.icm"
+       id="color-profile4" /><filter
+       style="color-interpolation-filters:sRGB"
+       id="filter48"
+       x="-0.010502176"
+       y="-0.0075002301"
+       width="1.0213953"
+       height="1.0150005">
+       
+       <feTurbulence
+         type="turbulence"
+         result="result1"
+         numOctaves="7"
+         seed="300"
+         baseFrequency="0.2"
+         id="feTurbulence47" /><feDisplacementMap
+         xChannelSelector="R"
+         in2="result1"
+         result="result7"
+         id="feDisplacementMap47"
+         scale="0"
+         yChannelSelector="A" /><feBlend
+         in="result7"
+         in2="SourceGraphic"
+         mode="screen"
+         result="fbSourceGraphic"
+         id="feBlend47" /><feColorMatrix
+         result="fbSourceGraphicAlpha"
+         values="1 0 0 -1 0 1 0 1 -1 0 1 0 0 -1 0 -0.8 -1 0 4 -2.5 "
+         id="feColorMatrix47" /><feGaussianBlur
+         result="result0"
+         in="fbSourceGraphicAlpha"
+         stdDeviation="0.5"
+         id="feGaussianBlur47" /><feSpecularLighting
+         result="result6"
+         surfaceScale="5"
+         specularConstant="1"
+         specularExponent="5"
+         id="feSpecularLighting47"><feDistantLight
+           azimuth="225"
+           elevation="35"
+           id="feDistantLight47" /></feSpecularLighting><feComposite
+         in2="SourceGraphic"
+         k3="1"
+         k2="0.5"
+         operator="arithmetic"
+         result="result4"
+         id="feComposite47"
+         k1="0"
+         k4="0" /><feComposite
+         operator="in"
+         result="result2"
+         in="result4"
+         in2="SourceGraphic"
+         id="feComposite48" /></filter><filter
+       width="1.0213953"
+       height="1.0150005"
+       y="-0.0075002299"
+       x="-0.010502176"
+       style="color-interpolation-filters:sRGB"
+       id="filter59"><feTurbulence
+         baseFrequency="0.71131147540983608"
+         type="turbulence"
+         seed="203"
+         numOctaves="9"
+         result="result1"
+         id="feTurbulence59" /><feDisplacementMap
+         xChannelSelector="R"
+         yChannelSelector="G"
+         scale="14.666667"
+         in="SourceGraphic"
+         id="feDisplacementMap59" /></filter></defs>
+         <rect width="100%" height="100%" fill="black" />
+         <g
+     id="layer1"
+     style="filter:url(#filter59)"
+     transform="translate(-13.96074,-47.319099)"><g
+       id="g5"
+       style="stroke:#ebebf0;stroke-linecap:butt;stroke-linejoin:bevel;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal;filter:url(#filter48)"
+       transform="translate(28.643184,8.8024543)"><path
+         style="opacity:0.615151;fill:none;fill-opacity:0;stroke:#ebebf0;stroke-width:4.4557;stroke-linecap:butt;stroke-linejoin:bevel;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+         d="M 16.764832,130.04254 C 159.88219,-18.449812 283.48067,129.23625 283.48067,129.23625 M 134.45699,48.519099"
+         id="path1" /><path
+         style="opacity:0.615151;fill:none;fill-opacity:0;stroke:#ebebf0;stroke-width:4.4557;stroke-linecap:butt;stroke-linejoin:bevel;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+         d="M 17.050055,126.99075 C 160.16741,275.4831 283.76589,127.79704 283.76589,127.79704 M 134.74221,208.51419"
+         id="path1-8" /><ellipse
+         style="opacity:0.615151;fill:none;fill-opacity:0;stroke:#ebebf0;stroke-width:3;stroke-linecap:butt;stroke-linejoin:bevel;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+         id="path4"
+         cx="150.74937"
+         cy="130.33913"
+         rx="35.986488"
+         ry="35.27034" /><path
+         style="opacity:0.615151;fill:none;fill-opacity:0;stroke:#ebebf0;stroke-width:2.95804;stroke-linecap:butt;stroke-linejoin:bevel;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+         d="M 151.46553,62.663043 V 194.25543"
+         id="path5" /></g></g></svg>

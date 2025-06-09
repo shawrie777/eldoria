@@ -1,4 +1,4 @@
-import { Board, conspir, conspirComplete } from "./characters";
+import { Board, conspir } from "./characters";
 
 export default function Conspiracy() {
   return (

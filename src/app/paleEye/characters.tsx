@@ -16,7 +16,7 @@ export type Character = {
 }
 
 export function CharacterCard({character} : {character: Character}) {
-    const [flipped, setFlipped] = useState<Boolean>(false);
+    const [flipped, setFlipped] = useState<boolean>(false);
     function flip() {
         setFlipped(!flipped);
     }
@@ -152,105 +152,105 @@ export const conspir : Character[] = [{
     ]
 }]
 
-export const conspirComplete : Character = {
-    codename: "Eagle",
-    town: "Earthfield",
-    subs: [
-        {
-            codename: "Komodo",
-            town: "Earthfield Castle"
-        },
-        {
-            codename: "Owl",
-            town: "Clifrost",
-        },
-        {
-            codename: "Bear",
-            town: "Oalehelm",
-        },
-        {
-            codename: "Magpie",
-            town: "Houndholver",
-            subs: [
-                {
-                    codename: "Wolf",
-                    town: "Doroma",
-                }
-            ]
-        },
-        {
-            codename: "Tiger",
-            town: "Sprinhelm",
-            subs: [
-                {
-                    codename: "Vulture",
-                    town: "Sunhelm",
-                    subs: [
-                        {
-                            codename: "Lion",
-                            town: "Dradowden",
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            codename: "Spider",
-            town: "Sungview",
-            subs: [
-                {
-                    codename: "Ibex",
-                    town: "Eldeguard",
-                },
-                {
-                    codename: "Crow",
-                    town: "Bellder",
-                },
-                {
-                    codename: "Hawk",
-                    town: "Freystar",
-                },
-                {
-                    codename: "Jaguar",
-                    town: "Snowdon",
-                    subs: [
-                        {
-                            codename: "Gorilla",
-                            town: "Mudwellder",
-                            subs: [
-                                {
-                                    codename: "Raven",
-                                    town: "Bearcoast",
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    codename: "Fox",
-                    town: "Dawnwameda",
-                    subs: [
-                        {
-                            codename: "Unicorn",
-                            town: "Neguard",
-                        },
-                        {
-                            codename: "Panther",
-                            town: "Lightdatere",
-                        },
-                        {
-                            codename: "Dragon",
-                            town: "Lirehold",
-                            subs: [
-                                {
-                                    codename: "Yeti",
-                                    town: "Mosshirere"
-                                }
-                            ]
-                        }
-                    ]
-                },
-            ]
-        }
-    ]
-}
+// export const conspirComplete : Character = {
+//     codename: "Eagle",
+//     town: "Earthfield",
+//     subs: [
+//         {
+//             codename: "Komodo",
+//             town: "Earthfield Castle"
+//         },
+//         {
+//             codename: "Owl",
+//             town: "Clifrost",
+//         },
+//         {
+//             codename: "Bear",
+//             town: "Oalehelm",
+//         },
+//         {
+//             codename: "Magpie",
+//             town: "Houndholver",
+//             subs: [
+//                 {
+//                     codename: "Wolf",
+//                     town: "Doroma",
+//                 }
+//             ]
+//         },
+//         {
+//             codename: "Tiger",
+//             town: "Sprinhelm",
+//             subs: [
+//                 {
+//                     codename: "Vulture",
+//                     town: "Sunhelm",
+//                     subs: [
+//                         {
+//                             codename: "Lion",
+//                             town: "Dradowden",
+//                         }
+//                     ]
+//                 }
+//             ]
+//         },
+//         {
+//             codename: "Spider",
+//             town: "Sungview",
+//             subs: [
+//                 {
+//                     codename: "Ibex",
+//                     town: "Eldeguard",
+//                 },
+//                 {
+//                     codename: "Crow",
+//                     town: "Bellder",
+//                 },
+//                 {
+//                     codename: "Hawk",
+//                     town: "Freystar",
+//                 },
+//                 {
+//                     codename: "Jaguar",
+//                     town: "Snowdon",
+//                     subs: [
+//                         {
+//                             codename: "Gorilla",
+//                             town: "Mudwellder",
+//                             subs: [
+//                                 {
+//                                     codename: "Raven",
+//                                     town: "Bearcoast",
+//                                 }
+//                             ]
+//                         }
+//                     ]
+//                 },
+//                 {
+//                     codename: "Fox",
+//                     town: "Dawnwameda",
+//                     subs: [
+//                         {
+//                             codename: "Unicorn",
+//                             town: "Neguard",
+//                         },
+//                         {
+//                             codename: "Panther",
+//                             town: "Lightdatere",
+//                         },
+//                         {
+//                             codename: "Dragon",
+//                             town: "Lirehold",
+//                             subs: [
+//                                 {
+//                                     codename: "Yeti",
+//                                     town: "Mosshirere"
+//                                 }
+//                             ]
+//                         }
+//                     ]
+//                 },
+//             ]
+//         }
+//     ]
+// }

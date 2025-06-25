@@ -189,7 +189,7 @@ export const conspir : Character[] = [{
                     description: "Letter found in the office safe.",
                     content: <>
                         <p>Ibex,</p>
-                        <p>We'll move tomorrow. I'll be on the early boat from Freystar and we can head south on horseback.</p>
+                        <p>We&apos;ll move tomorrow. I&apos;ll be on the early boat from Freystar and we can head south on horseback.</p>
                         <p>Hawk</p>
                         </>
                 },
@@ -225,7 +225,7 @@ export const conspir : Character[] = [{
                 },{
                     title: "Merrin's Journal",
                     description: "A fragment of a page from Merrin's journal",
-                    content: <p>Clearly it was foolish to think they'd let me leave! I need to move as soon as I recover the amulet!</p>
+                    content: <p>Clearly it was foolish to think they&apos;d let me leave! I need to move as soon as I recover the amulet!</p>
                 },{
                     title: "Merrin's Amulet",
                     src: "necklace-simple-round-carved-wood.webp"

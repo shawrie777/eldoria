@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat&display=swap');
+
 .circle {
     border-radius: 50%;
     background-color: lightblue;
@@ -19,21 +21,71 @@
         padding: 2rem 0;
         font-size: 1.2rem;
         backface-visibility: hidden;
+        background-size: contain;
     }
 
     & > div:last-child {
         transform: rotateY(180deg);
     }
+
+    & p {
+        max-width: 250px;
+        text-align: center;
+    }
+}
+
+.dead > div {
+    background-image: url("/red_cross.png");
 }
 
 .outer {
     position: absolute;
     perspective: 1000px;
-    height: 200px;
-    width: 200px;
+    height: 300px;
+    width: 300px;
     border-radius: 50%;
+    overflow: visible;
 }
 
 .flipped {
     transform: rotateY(180deg);
+}
+
+.clue {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 30vw;
+    pointer-events: none;
+    background-color: lightgrey;
+    color: black;
+    border-radius: 1.5rem;
+    padding: 2rem;
+}
+
+.clue h1 {
+    text-align: center;
+    padding-bottom: 1rem;
+}
+
+.clue img {
+    object-fit: contain;
+    width: 100%;
+    border: solid 1px black;
+}
+
+.clue p:not(:last-child), .clue ol {
+    font-family: "Caveat";
+    font-size: 2rem;
+}
+
+.clue p:last-child {
+    padding-top: 1rem;
+}
+
+.clueLink {
+    cursor: pointer;
+    font-style: italic;
+    color: #0f0f0f;
 }

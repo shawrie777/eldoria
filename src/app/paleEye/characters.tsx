@@ -1,28 +1,36 @@
 'use client'
 
-import React from "react";
+import React, { ReactNode } from "react";
 
 import { useState } from "react"
 import classNames from "classnames";
 
 import style from './characterCircle.module.css'
 
-export type Character = {
+type Clue = {
+    title: string;
+    description?: string;
+} & (
+    {src: string;} | {content: ReactNode}
+)
+
+type Character = {
   name?: string,
   codename?: string,
   town?: string,
-  clues?: string[],
+  clues?: Array<string | Clue>,
   subs?: Character[],
+  dead?: boolean,
 }
 
-export function CharacterCard({character} : {character: Character}) {
+function CharacterCard({character, clueSetter} : {character: Character, clueSetter: (c: Clue | null) => void}) {
     const [flipped, setFlipped] = useState<boolean>(false);
     function flip() {
         setFlipped(!flipped);
     }
 
     return <div className={classNames(style.outer)} onMouseEnter={flip} onMouseLeave={flip}>
-        <div className={classNames(style.circle, flipped && style.flipped)}
+        <div className={classNames(style.circle, flipped && style.flipped, character.dead && style.dead)}
        >
         <div>
             {character.name && <p>{character.name}</p>}
@@ -30,7 +38,16 @@ export function CharacterCard({character} : {character: Character}) {
             {character.town && <p>{character.town}</p>}
         </div>
         <div>
-            {character.clues?.map((clue, idx) => <p key={idx}>{clue}</p>)}
+            {character.clues ? character.clues?.map((clue, idx) => {
+                if (typeof clue === "string")
+                    return <p key={idx}>{clue}</p>;
+                return <p key={idx} className={style.clueLink}
+                    onMouseEnter={() => clueSetter(clue)}
+                    onMouseLeave={() => clueSetter(null)}
+                    >
+                    {clue.title}
+                </p>
+            }) : <p>No clues yet!</p>}
         </div>
     </div></div>
 }
@@ -64,9 +81,11 @@ function lineMatch(first: Line, second: Line) {
 }
 
 export function Board({characters}:{characters: Character[]}){
+    const [currentClue, setCurrentClue] = useState<Clue | null>(null);
+
     const {rowMax, rowCount} = getCardCounts(characters);
 
-    const width = 250 * rowMax;
+    const width = 350 * rowMax;
 
     const results : React.JSX.Element[] = [];
     let paths: Line[] = []
@@ -101,26 +120,37 @@ export function Board({characters}:{characters: Character[]}){
         sizes.forEach(({character, count}) => {
             const prevEnd = endPos;
             endPos += count / total * width;
-            const pos = (prevEnd + endPos) / 2 - 100;
+            const pos = (prevEnd + endPos) / 2 - 150;
             
             if (parentPos) {
-                addLine({start: parentPos, end: {x: parentPos.x, y: (parentPos.y + row * 250 + 100) / 2}});
-                addLine({start: {x: parentPos.x, y: (parentPos.y + row * 250 + 100) / 2}, end: {x: pos + 100, y: (parentPos.y + row * 250 + 100) / 2}});
-                addLine({start: {x: pos + 100, y: (parentPos.y + row * 250 + 100) / 2}, end: {x: pos + 100, y: row * 250 + 100}});
+                addLine({start: parentPos, end: {x: parentPos.x, y: (parentPos.y + row * 350 + 150) / 2}});
+                addLine({start: {x: parentPos.x, y: (parentPos.y + row * 350 + 150) / 2}, end: {x: pos + 150, y: (parentPos.y + row * 350 + 150) / 2}});
+                addLine({start: {x: pos + 150, y: (parentPos.y + row * 350 + 150) / 2}, end: {x: pos + 150, y: row * 350 + 150}});
             };
-            results.push(<foreignObject key={results.length} x={pos} y={row * 250} width="200px" height="200px">
-                <CharacterCard character={character}/>
+            results.push(<foreignObject key={results.length} x={pos} y={row * 350} width="300px" height="300px">
+                <CharacterCard character={character} clueSetter={setCurrentClue}/>
             </foreignObject>);
             
-            if (character.subs) renderChars(character.subs, prevEnd, endPos - prevEnd, row + 1, {x: pos + 100, y: row * 250 + 100});
+            if (character.subs) renderChars(character.subs, prevEnd, endPos - prevEnd, row + 1, {x: pos + 150, y: row * 350 + 150});
         })
     }
 
     renderChars(characters, 0, width, 0);
-    return <svg viewBox={`0 0 ${width} ${250 * rowCount}`} width={width} height={250 * rowCount}>
-        {paths.map((l, idx) => <path key={idx} stroke="white" fill="none" d={`M ${l.start.x} ${l.start.y} L ${l.end.x} ${l.end.y}`}/>)}
-        {results}
-    </svg>
+    return <>
+        {currentClue && <RenderClue clue={currentClue}/>}
+        <svg viewBox={`0 0 ${width} ${350 * rowCount}`} width={width} height={350 * rowCount}>
+            {paths.map((l, idx) => <path key={idx} stroke="white" fill="none" d={`M ${l.start.x} ${l.start.y} L ${l.end.x} ${l.end.y}`}/>)}
+            {results}
+        </svg>
+    </>
+}
+
+function RenderClue({clue} : {clue: Clue}) {
+    return <div className={style.clue}>
+        <h1>{clue.title}</h1>
+        {"src" in clue ? <img src={clue.src} alt={clue.title}/> : clue.content}
+        {clue.description && <p className={style.description}>{clue.description}</p>}
+    </div>
 }
 
 function getCardCounts(characters: Character[]) : {rowMax : number, rowCount : number} {
@@ -136,20 +166,82 @@ function getCardCounts(characters: Character[]) : {rowMax : number, rowCount : n
 
 export const conspir : Character[] = [{
     codename: "Spider",
+    clues: ["Ordered Crow's murder"],
     subs: [
         {
             codename: "Ibex",
+            name: "Embervein",
             town: "Eldeguard",
+            clues: [
+                "Helped in Crow's murder",
+                "Works at the Blackgem Mine",
+                {
+                    title: "Letter from Spider",
+                    description: "Letter found in the office safe.",
+                    content: <>
+                        <p>Ibex,</p>
+                        <p>Crow is having doubts. Meet with Hawk and deal with the situation. Report to the Broken Lantern in 2 weeks.</p>
+                        <p>Spider</p>
+                        </>
+                },
+                {
+                    title: "Letter from Hawk",
+                    description: "Letter found in the office safe.",
+                    content: <>
+                        <p>Ibex,</p>
+                        <p>We'll move tomorrow. I'll be on the early boat from Freystar and we can head south on horseback.</p>
+                        <p>Hawk</p>
+                        </>
+                },
+                {
+                    title: "Order from Oalehelm",
+                    description: "Order for black saphire found in the office safe.",
+                    content: <>
+                        <p>Mr Embervein</p>
+                        <p>Please prepare the following for delivery to Oalehelm as soon as possilbe.</p>
+                        <ol><li>Refined Black Sapphire (Grade A) — 30 ingots (approx. 10 lbs each)</li>
+                        <li>Rough-Cut Black Sapphire Shards — quantity: 20 pieces, no smaller than a man’s thumb</li>
+                        <li>Sifting Dust and Tailings — 2 crates (as requested)</li></ol>
+                        <p>The project must keep moving or our mutual friend will be displeased.</p>
+                        <p>X</p>
+                        </>
+                }
+            ]
         },
         {
             codename: "Crow",
+            name: "Merrin",
             town: "Bellder",
+            dead : true,
+            clues: [
+                {
+                    title: "Ripped Cloth",
+                    description: "Ripped cloth found in Merrin's House",
+                    src: "cloth-worn-blue.webp"
+                },{
+                    title: "Merrin's Letter",
+                    description: "A fragment of a letter found in Merrin's pocket",
+                    content: <><p>…tience runs short! Fall in line or expect a visit from The Ibex.</p><p>Spider</p></>
+                },{
+                    title: "Merrin's Journal",
+                    description: "A fragment of a page from Merrin's journal",
+                    content: <p>Clearly it was foolish to think they'd let me leave! I need to move as soon as I recover the amulet!</p>
+                },{
+                    title: "Merrin's Amulet",
+                    src: "necklace-simple-round-carved-wood.webp"
+                }
+            ]
         },
         {
             codename: "Hawk",
             town: "Freystar",
+            clues: [
+                "Helped in Crow's murder",
+            ]
         },
     ]
+}, {
+    town: "Oalehelm"
 }]
 
 // export const conspirComplete : Character = {

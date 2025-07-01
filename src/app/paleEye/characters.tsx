@@ -1,8 +1,8 @@
 'use client'
 
-import React, { ReactNode } from "react";
-
-import { useState } from "react"
+import React, { ReactNode, useEffect } from "react";
+import { useState, useContext } from "react"
+import { DmContext } from "../context";
 import classNames from "classnames";
 
 import style from './characterCircle.module.css'
@@ -82,7 +82,35 @@ function lineMatch(first: Line, second: Line) {
 
 export function Board({characters}:{characters: Character[]}){
     const [currentClue, setCurrentClue] = useState<Clue | null>(null);
+    // const [checkedChars, setCheckedChars] = useState<Character[]>(characters);
 
+    // const dmMode = useContext(DmContext);
+    // useEffect(()=> {
+    //     if (!dmMode){
+    //         const checked : Character[] = [];
+
+    //         function checkChar(char: Character) : boolean{
+    //             let state = false;
+    //             if (char.name)
+    //                 if (char.name.startsWith("#")) char.name = undefined;
+    //                 else state = true;
+    //             if (char.codename)
+    //                 if (char.codename.startsWith("#")) char.codename = undefined;
+    //                 else state = true;
+    //             if (char.town)
+    //                 if (char.town.startsWith("#")) char.town = undefined;
+    //                 else state = true;
+    //             if (char.clues?.length !== 0)
+    //                 state = true;
+    //             return state;
+    //         };
+
+    //         characters.forEach(char => {
+    //             if (checkChar(char))
+    //                 checked.push(char)
+    //         })
+    // }},[dmMode])
+    
     const {rowMax, rowCount} = getCardCounts(characters);
 
     const width = 350 * rowMax;
@@ -244,105 +272,105 @@ export const conspir : Character[] = [{
     town: "Oalehelm"
 }]
 
-// export const conspirComplete : Character = {
-//     codename: "Eagle",
-//     town: "Earthfield",
-//     subs: [
-//         {
-//             codename: "Komodo",
-//             town: "Earthfield Castle"
-//         },
-//         {
-//             codename: "Owl",
-//             town: "Clifrost",
-//         },
-//         {
-//             codename: "Bear",
-//             town: "Oalehelm",
-//         },
-//         {
-//             codename: "Magpie",
-//             town: "Houndholver",
-//             subs: [
-//                 {
-//                     codename: "Wolf",
-//                     town: "Doroma",
-//                 }
-//             ]
-//         },
-//         {
-//             codename: "Tiger",
-//             town: "Sprinhelm",
-//             subs: [
-//                 {
-//                     codename: "Vulture",
-//                     town: "Sunhelm",
-//                     subs: [
-//                         {
-//                             codename: "Lion",
-//                             town: "Dradowden",
-//                         }
-//                     ]
-//                 }
-//             ]
-//         },
-//         {
-//             codename: "Spider",
-//             town: "Sungview",
-//             subs: [
-//                 {
-//                     codename: "Ibex",
-//                     town: "Eldeguard",
-//                 },
-//                 {
-//                     codename: "Crow",
-//                     town: "Bellder",
-//                 },
-//                 {
-//                     codename: "Hawk",
-//                     town: "Freystar",
-//                 },
-//                 {
-//                     codename: "Jaguar",
-//                     town: "Snowdon",
-//                     subs: [
-//                         {
-//                             codename: "Gorilla",
-//                             town: "Mudwellder",
-//                             subs: [
-//                                 {
-//                                     codename: "Raven",
-//                                     town: "Bearcoast",
-//                                 }
-//                             ]
-//                         }
-//                     ]
-//                 },
-//                 {
-//                     codename: "Fox",
-//                     town: "Dawnwameda",
-//                     subs: [
-//                         {
-//                             codename: "Unicorn",
-//                             town: "Neguard",
-//                         },
-//                         {
-//                             codename: "Panther",
-//                             town: "Lightdatere",
-//                         },
-//                         {
-//                             codename: "Dragon",
-//                             town: "Lirehold",
-//                             subs: [
-//                                 {
-//                                     codename: "Yeti",
-//                                     town: "Mosshirere"
-//                                 }
-//                             ]
-//                         }
-//                     ]
-//                 },
-//             ]
-//         }
-//     ]
-// }
+export const conspirComplete : Character = {
+    codename: "Eagle",
+    town: "Earthfield",
+    subs: [
+        {
+            codename: "Komodo",
+            town: "Earthfield Castle"
+        },
+        {
+            codename: "Owl",
+            town: "Clifrost",
+        },
+        {
+            codename: "Bear",
+            town: "Oalehelm",
+        },
+        {
+            codename: "Magpie",
+            town: "Houndholver",
+            subs: [
+                {
+                    codename: "Wolf",
+                    town: "Doroma",
+                }
+            ]
+        },
+        {
+            codename: "Tiger",
+            town: "Sprinhelm",
+            subs: [
+                {
+                    codename: "Vulture",
+                    town: "Sunhelm",
+                    subs: [
+                        {
+                            codename: "Lion",
+                            town: "Dradowden",
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            codename: "Spider",
+            town: "Sungview",
+            subs: [
+                {
+                    codename: "Ibex",
+                    town: "Eldeguard",
+                },
+                {
+                    codename: "Crow",
+                    town: "Bellder",
+                },
+                {
+                    codename: "Hawk",
+                    town: "Freystar",
+                },
+                {
+                    codename: "Jaguar",
+                    town: "Snowdon",
+                    subs: [
+                        {
+                            codename: "Gorilla",
+                            town: "Mudwellder",
+                            subs: [
+                                {
+                                    codename: "Raven",
+                                    town: "Bearcoast",
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    codename: "Fox",
+                    town: "Dawnwameda",
+                    subs: [
+                        {
+                            codename: "Unicorn",
+                            town: "Neguard",
+                        },
+                        {
+                            codename: "Panther",
+                            town: "Lightdatere",
+                        },
+                        {
+                            codename: "Dragon",
+                            town: "Lirehold",
+                            subs: [
+                                {
+                                    codename: "Yeti",
+                                    town: "Mosshirere"
+                                }
+                            ]
+                        }
+                    ]
+                },
+            ]
+        }
+    ]
+}

@@ -1,5 +1,7 @@
-import type { Metadata } from "next";
+"use client"
+import { useEffect, useState } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
+import { DmContext } from "./context";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,19 +14,28 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Eldoria",
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [dmMode, setDmMode] = useState<boolean>(false);
+  const [dmSwitch, setDmSwitch] = useState<boolean>(false);
+
+  useEffect(()=>{
+    setDmSwitch(localStorage.getItem("dmMode") !== null);
+  }, [])
+
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+        <DmContext value={dmMode}>
+          {dmSwitch && <label className="dmSwitch">
+            <input type="checkbox" onChange={e => setDmMode(e.target.checked)}/>
+            <span />
+          </label>}
+          {children}
+        </DmContext>
       </body>
     </html>
   );

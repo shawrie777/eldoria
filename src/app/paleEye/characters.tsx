@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode } from "react";
 import { useState, useContext } from "react"
 import { DmContext } from "../context";
 import classNames from "classnames";
@@ -38,7 +38,7 @@ function CharacterCard({character, clueSetter} : {character: Character, clueSett
             {character.town && <p>{character.town}</p>}
         </div>
         <div>
-            {character.clues ? character.clues?.map((clue, idx) => {
+            {character.clues?.length ? character.clues?.map((clue, idx) => {
                 if (typeof clue === "string")
                     return <p key={idx}>{clue}</p>;
                 return <p key={idx} className={style.clueLink}
@@ -82,36 +82,45 @@ function lineMatch(first: Line, second: Line) {
 
 export function Board({characters}:{characters: Character[]}){
     const [currentClue, setCurrentClue] = useState<Clue | null>(null);
-    // const [checkedChars, setCheckedChars] = useState<Character[]>(characters);
-
-    // const dmMode = useContext(DmContext);
-    // useEffect(()=> {
-    //     if (!dmMode){
-    //         const checked : Character[] = [];
-
-    //         function checkChar(char: Character) : boolean{
-    //             let state = false;
-    //             if (char.name)
-    //                 if (char.name.startsWith("#")) char.name = undefined;
-    //                 else state = true;
-    //             if (char.codename)
-    //                 if (char.codename.startsWith("#")) char.codename = undefined;
-    //                 else state = true;
-    //             if (char.town)
-    //                 if (char.town.startsWith("#")) char.town = undefined;
-    //                 else state = true;
-    //             if (char.clues?.length !== 0)
-    //                 state = true;
-    //             return state;
-    //         };
-
-    //         characters.forEach(char => {
-    //             if (checkChar(char))
-    //                 checked.push(char)
-    //         })
-    // }},[dmMode])
     
-    const {rowMax, rowCount} = getCardCounts(characters);
+    const dmMode = useContext(DmContext);
+
+    function checkChars(chars: Character[]) : Character[] {
+        return chars.flatMap(checkChar);
+    }
+
+    function checkChar(c: Character) : Character[] {
+        const char = {...c};
+        let state = false;
+        if (char.name)
+            if (char.name.startsWith("#")) char.name = undefined;
+            else state = true;
+        if (char.codename)
+            if (char.codename.startsWith("#")) char.codename = undefined;
+            else state = true;
+        if (char.town)
+            if (char.town.startsWith("#")) char.town = undefined;
+            else state = true;
+
+        char.clues = [];
+        if (c.clues && c.clues?.length !== 0)
+            c.clues.forEach(clue => {
+            if (typeof clue === "string") {
+                if (!clue.startsWith("#")) char.clues!.push(clue);
+            } else {
+                if (!clue.title.startsWith("#")) char.clues!.push(clue);
+            }})
+
+        if (char.clues?.length !== 0)
+            state = true;
+        const subs = char.subs ? checkChars(char.subs) : [];
+        if (!state) return subs
+        char.subs = subs;
+        return [char];
+    };
+
+    const checkedChars = dmMode ? characters: checkChars(characters);
+    const {rowMax, rowCount} = getCardCounts(checkedChars);
 
     const width = 350 * rowMax;
 
@@ -140,7 +149,7 @@ export function Board({characters}:{characters: Character[]}){
 
     function renderChars(characters: Character[], rowStart: number, width: number, row: number, parentPos?: Point) {
         const sizes = characters.map(ch => {
-            return {character: ch, count: ch.subs ? getCardCounts(ch.subs).rowMax : 1}
+            return {character: ch, count: ch.subs && ch.subs.length? getCardCounts(ch.subs).rowMax : 1}
         });
         const total = sizes.reduce((total, current) => total + current.count, 0);
         
@@ -163,7 +172,7 @@ export function Board({characters}:{characters: Character[]}){
         })
     }
 
-    renderChars(characters, 0, width, 0);
+    renderChars(checkedChars, 0, width, 0);
     return <>
         {currentClue && <RenderClue clue={currentClue}/>}
         <svg viewBox={`0 0 ${width} ${350 * rowCount}`} width={width} height={350 * rowCount}>
@@ -189,126 +198,60 @@ function getCardCounts(characters: Character[]) : {rowMax : number, rowCount : n
         rowCount++;
     }
 
-    return {rowMax: characters.reduce((total, ch) => total + (ch.subs ? getCardCounts(ch.subs!).rowMax : 1), 0), rowCount};
+    return {rowMax: characters.reduce((total, ch) => total + (ch.subs?.length ? getCardCounts(ch.subs).rowMax : 1), 0), rowCount};
 }
 
-export const conspir : Character[] = [{
-    codename: "Spider",
-    clues: ["Ordered Crow's murder"],
+export const conspir : Character = {
+    codename: "#Eagle",
+    town: "#Earthfield",
     subs: [
         {
-            codename: "Ibex",
-            name: "Embervein",
-            town: "Eldeguard",
-            clues: [
-                "Helped in Crow's murder",
-                "Works at the Blackgem Mine",
-                {
-                    title: "Letter from Spider",
-                    description: "Letter found in the office safe.",
-                    content: <>
-                        <p>Ibex,</p>
-                        <p>Crow is having doubts. Meet with Hawk and deal with the situation. Report to the Broken Lantern in 2 weeks.</p>
-                        <p>Spider</p>
-                        </>
-                },
-                {
-                    title: "Letter from Hawk",
-                    description: "Letter found in the office safe.",
-                    content: <>
-                        <p>Ibex,</p>
-                        <p>We&apos;ll move tomorrow. I&apos;ll be on the early boat from Freystar and we can head south on horseback.</p>
-                        <p>Hawk</p>
-                        </>
-                },
-                {
-                    title: "Order from Oalehelm",
-                    description: "Order for black saphire found in the office safe.",
-                    content: <>
-                        <p>Mr Embervein</p>
-                        <p>Please prepare the following for delivery to Oalehelm as soon as possilbe.</p>
-                        <ol><li>Refined Black Sapphire (Grade A) — 30 ingots (approx. 10 lbs each)</li>
-                        <li>Rough-Cut Black Sapphire Shards — quantity: 20 pieces, no smaller than a man’s thumb</li>
-                        <li>Sifting Dust and Tailings — 2 crates (as requested)</li></ol>
-                        <p>The project must keep moving or our mutual friend will be displeased.</p>
-                        <p>X</p>
-                        </>
-                }
-            ]
+            codename: "#Komodo",
+            town: "#Earthfield Castle"
         },
         {
-            codename: "Crow",
-            name: "Merrin",
-            town: "Bellder",
-            dead : true,
-            clues: [
-                {
-                    title: "Ripped Cloth",
-                    description: "Ripped cloth found in Merrin's House",
-                    src: "cloth-worn-blue.webp"
-                },{
-                    title: "Merrin's Letter",
-                    description: "A fragment of a letter found in Merrin's pocket",
-                    content: <><p>…tience runs short! Fall in line or expect a visit from The Ibex.</p><p>Spider</p></>
-                },{
-                    title: "Merrin's Journal",
-                    description: "A fragment of a page from Merrin's journal",
-                    content: <p>Clearly it was foolish to think they&apos;d let me leave! I need to move as soon as I recover the amulet!</p>
-                },{
-                    title: "Merrin's Amulet",
-                    src: "necklace-simple-round-carved-wood.webp"
-                }
-            ]
+            codename: "#Owl",
+            town: "#Clifrost",
         },
         {
-            codename: "Hawk",
-            town: "Freystar",
-            clues: [
-                "Helped in Crow's murder",
-            ]
-        },
-    ]
-}, {
-    town: "Oalehelm"
-}]
-
-export const conspirComplete : Character = {
-    codename: "Eagle",
-    town: "Earthfield",
-    subs: [
-        {
-            codename: "Komodo",
-            town: "Earthfield Castle"
-        },
-        {
-            codename: "Owl",
-            town: "Clifrost",
-        },
-        {
-            codename: "Bear",
+            codename: "#Bear",
             town: "Oalehelm",
+            clues: [
+                {title: "Black sapphire purchase.",
+                    description: "Order for black saphire found in the Blackgem safe.",
+                    content: <>
+                    <p>Mr Embervein</p>
+                    <p>Please prepare the following for delivery to Oalehelm as soon as possilbe.</p>
+                    <ol><li>Refined Black Sapphire (Grade A) — 30 ingots (approx. 10 lbs each)</li>
+                    <li>Rough-Cut Black Sapphire Shards — quantity: 20 pieces, no smaller than a man’s thumb</li>
+                    <li>Sifting Dust and Tailings — 2 crates (as requested)</li></ol>
+                    <p>The project must keep moving or our mutual friend will be displeased.</p>
+                    <p>X</p>
+                    </>},
+                "#Building a portal"
+            ]
         },
         {
-            codename: "Magpie",
-            town: "Houndholver",
+            codename: "#Magpie",
+            town: "#Houndholver",
             subs: [
                 {
-                    codename: "Wolf",
-                    town: "Doroma",
+                    codename: "#Wolf",
+                    town: "#Doroma",
                 }
             ]
         },
         {
-            codename: "Tiger",
-            town: "Sprinhelm",
+            codename: "#Tiger",
+            town: "#Sprinhelm",
             subs: [
                 {
-                    codename: "Vulture",
-                    town: "Sunhelm",
+                    codename: "#Vulture",
+                    town: "#Sunhelm",
                     subs: [
                         {
-                            codename: "Lion",
-                            town: "Dradowden",
+                            codename: "#Lion",
+                            town: "#Dradowden",
                         }
                     ]
                 }
@@ -317,54 +260,118 @@ export const conspirComplete : Character = {
         {
             codename: "Spider",
             town: "Sungview",
+            clues: [
+                "Ordered Crow's murder",
+                "Expected at the Broken Lantern near Sungview in a few days."
+            ],
             subs: [
                 {
                     codename: "Ibex",
+                    name: "Brokk Embervein",
                     town: "Eldeguard",
+                    clues: [
+                        "Helped in Crow's murder",
+                        "Works at the Blackgem Mine",
+                        {
+                            title: "Letter from Spider",
+                            description: "Letter found in the office safe.",
+                            content: <>
+                                <p>Ibex,</p>
+                                <p>Crow is having doubts. Meet with Hawk and deal with the situation. Report to the Broken Lantern in 2 weeks.</p>
+                                <p>Spider</p>
+                                </>
+                        },
+                        {
+                            title: "Letter from Hawk",
+                            description: "Letter found in the office safe.",
+                            content: <>
+                                <p>Ibex,</p>
+                                <p>We&apos;ll move tomorrow. I&apos;ll be on the early boat from Freystar and we can head south on horseback.</p>
+                                <p>Hawk</p>
+                                </>
+                        },
+                        {
+                            title: "Order from Oalehelm",
+                            description: "Order for black saphire found in the office safe.",
+                            content: <>
+                                <p>Mr Embervein</p>
+                                <p>Please prepare the following for delivery to Oalehelm as soon as possilbe.</p>
+                                <ol><li>Refined Black Sapphire (Grade A) — 30 ingots (approx. 10 lbs each)</li>
+                                <li>Rough-Cut Black Sapphire Shards — quantity: 20 pieces, no smaller than a man’s thumb</li>
+                                <li>Sifting Dust and Tailings — 2 crates (as requested)</li></ol>
+                                <p>The project must keep moving or our mutual friend will be displeased.</p>
+                                <p>X</p>
+                                </>
+                        }
+                    ]
                 },
                 {
                     codename: "Crow",
+                    name: "Merrin",
                     town: "Bellder",
+                    dead : true,
+                    clues: [
+                    {
+                        title: "Ripped Cloth",
+                        description: "Ripped cloth found in Merrin's House",
+                        src: "cloth-worn-blue.webp"
+                    },{
+                        title: "Merrin's Letter",
+                        description: "A fragment of a letter found in Merrin's pocket",
+                        content: <><p>…tience runs short! Fall in line or expect a visit from The Ibex.</p><p>Spider</p></>
+                    },{
+                        title: "Merrin's Journal",
+                        description: "A fragment of a page from Merrin's journal",
+                        content: <p>Clearly it was foolish to think they&apos;d let me leave! I need to move as soon as I recover the amulet!</p>
+                    },{
+                        title: "Merrin's Amulet",
+                        src: "necklace-simple-round-carved-wood.webp"
+                    }
+                ]
                 },
                 {
                     codename: "Hawk",
                     town: "Freystar",
+                    clues: [
+                        "Might be a sailor",
+                        "Helped in Crow's murder",
+                    ]
                 },
                 {
-                    codename: "Jaguar",
-                    town: "Snowdon",
+                    codename: "#Jaguar",
+                    town: "#Snowdon",
                     subs: [
                         {
-                            codename: "Gorilla",
-                            town: "Mudwellder",
+                            codename: "#Gorilla",
+                            town: "#Mudwellder",
                             subs: [
                                 {
-                                    codename: "Raven",
-                                    town: "Bearcoast",
+                                    codename: "#Raven",
+                                    town: "#Bearcoast",
                                 }
                             ]
                         }
                     ]
                 },
                 {
-                    codename: "Fox",
-                    town: "Dawnwameda",
+                    codename: "#Fox",
+                    town: "#Dawnwameda",
                     subs: [
                         {
-                            codename: "Unicorn",
-                            town: "Neguard",
+                            codename: "#Unicorn",
+                            town: "#Neguard",
                         },
                         {
-                            codename: "Panther",
-                            town: "Lightdatere",
+                            codename: "#Panther",
+                            town: "#Lightdatere",
                         },
                         {
-                            codename: "Dragon",
-                            town: "Lirehold",
+                            codename: "#Dragon",
+                            town: "#Lirehold",
                             subs: [
                                 {
-                                    codename: "Yeti",
-                                    town: "Mosshirere"
+                                    codename: "#Yeti",
+                                    town: "#Mosshirere"
                                 }
                             ]
                         }

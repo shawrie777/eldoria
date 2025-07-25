@@ -228,7 +228,9 @@ export const conspir : Character = {
                     <p>The project must keep moving or our mutual friend will be displeased.</p>
                     <p>X</p>
                     </>},
-                "#Building a portal"
+                "#Building a portal",
+                "Using black sapphire to build something.",
+                "Black sapphire is easy to enchant."
             ]
         },
         {
@@ -261,7 +263,8 @@ export const conspir : Character = {
             codename: "Spider",
             town: "Sungview",
             clues: [
-                "Ordered Crow's murder",
+                "Controls the southern section of the Pale Eye",
+                "Ordered Crow's murder.",
                 "Expected at the Broken Lantern near Sungview in a few days."
             ],
             subs: [
@@ -303,7 +306,8 @@ export const conspir : Character = {
                                 <p>X</p>
                                 </>
                         }
-                    ]
+                    ],
+                    dead: true,
                 },
                 {
                     codename: "Crow",
@@ -333,8 +337,9 @@ export const conspir : Character = {
                     codename: "Hawk",
                     town: "Freystar",
                     clues: [
-                        "Might be a sailor",
-                        "Helped in Crow's murder",
+                        "Patrols the shipping route between Eldeguard and Oalehelm.",
+                        "Own's a tavern called the Grey Gull",
+                        "Helped in Crow's murder.",
                     ]
                 },
                 {

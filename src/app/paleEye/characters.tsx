@@ -335,8 +335,10 @@ export const conspir : Character = {
                 },
                 {
                     codename: "Hawk",
+                    name: "Malen Blackwake",
                     town: "Freystar",
                     clues: [
+                        "Captain of the Storm's Talon",
                         "Patrols the shipping route between Eldeguard and Oalehelm.",
                         "Own's a tavern called the Grey Gull",
                         "Helped in Crow's murder.",

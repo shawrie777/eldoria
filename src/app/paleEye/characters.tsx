@@ -214,7 +214,7 @@ export const conspir : Character = {
             town: "#Clifrost",
         },
         {
-            codename: "#Bear",
+            codename: "Bear",
             town: "Oalehelm",
             clues: [
                 {title: "Black sapphire purchase.",
@@ -342,7 +342,8 @@ export const conspir : Character = {
                         "Patrols the shipping route between Eldeguard and Oalehelm.",
                         "Own's a tavern called the Grey Gull",
                         "Helped in Crow's murder.",
-                    ]
+                    ],
+                    dead: true,
                 },
                 {
                     codename: "#Jaguar",

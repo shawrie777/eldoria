@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useRef } from "react";
 import { useState, useContext } from "react"
 import { DmContext } from "../context";
 import classNames from "classnames";
@@ -172,13 +172,46 @@ export function Board({characters}:{characters: Character[]}){
         })
     }
 
+    const ref = useRef<HTMLDivElement>(null);
+    const [isDragging, setIsDragging] = useState(false);
+    const [start, setStart] = useState({x: 0, y: 0, scrollLeft: 0, scrollTop: 0});
+
+    const onMouseDown = (e: React.MouseEvent) => {
+        const div = ref.current;
+        if (!div) return;
+        setIsDragging(true);
+        setStart({
+            x: e.pageX - div.offsetLeft,
+            y: e.pageY - div.offsetTop,
+            scrollLeft: div.scrollLeft,
+            scrollTop: div.scrollTop,
+        })
+    };
+
+    const onMouseMove = (e: React.MouseEvent) => {
+        const div = ref.current;
+        if (!div || !isDragging) return;
+        e.preventDefault();
+        const x = e.pageX - div.offsetLeft;
+        const y = e.pageY - div.offsetTop;
+        const walkX = x - start.x;
+        const walkY = y - start.y;
+        div.scrollLeft = start.scrollLeft - walkX;
+        div.scrollTop = start.scrollTop - walkY;
+    };
+
+    const onMouseUp = () => setIsDragging(false);
+
     renderChars(checkedChars, 0, width, 0);
     return <>
         {currentClue && <RenderClue clue={currentClue}/>}
-        <svg viewBox={`0 0 ${width} ${350 * rowCount}`} width={width} height={350 * rowCount}>
-            {paths.map((l, idx) => <path key={idx} stroke="white" fill="none" d={`M ${l.start.x} ${l.start.y} L ${l.end.x} ${l.end.y}`}/>)}
-            {results}
-        </svg>
+        <div ref={ref} style={{width: "100vw", height: "100vh", overflow: "scroll", cursor: (isDragging ? "grabbing" : "grab")}}
+            onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp} onMouseLeave={onMouseUp}>
+            <svg viewBox={`0 0 ${width} ${350 * rowCount}`} width={width} height={350 * rowCount}>
+                {paths.map((l, idx) => <path key={idx} stroke="white" fill="none" d={`M ${l.start.x} ${l.start.y} L ${l.end.x} ${l.end.y}`}/>)}
+                {results}
+            </svg>
+        </div>
     </>
 }
 
@@ -230,7 +263,18 @@ export const conspir : Character = {
                     </>},
                 "#Building a portal",
                 "Using black sapphire to build something.",
-                "Black sapphire is easy to enchant."
+                "Black sapphire is easy to enchant.",
+                {
+                    title: "Hawk's Note",
+                    src: "/portal_scroll.png",
+                    description: "A note found on Hawk's ship"
+                },
+                {
+                    title: "Crew Notes",
+                    description: "Notes from Hawk's ship.",
+                    content: <><p>These stones don't feel right.. it's like they whisper in my head, an infernal humming…</p><br/>
+                        <p>I hate that place, it's always dark and grimy. I swear there's something in the alleys…</p></>
+                },
             ]
         },
         {
@@ -261,11 +305,13 @@ export const conspir : Character = {
         },
         {
             codename: "Spider",
+            name: "Therion Silverglade",
             town: "Sungview",
             clues: [
-                "Controls the southern section of the Pale Eye",
                 "Ordered Crow's murder.",
-                "Expected at the Broken Lantern near Sungview in a few days."
+                "Controls the southern section of the Pale Eye",
+                "Expected at the Broken Lantern near Sungview in a few days.",
+                "Dark-haired elven noble, with a scar over his eye."
             ],
             subs: [
                 {

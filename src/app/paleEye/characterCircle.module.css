@@ -9,6 +9,7 @@
     perspective: 1000px;
     transform-style: preserve-3d;
     transition: transform 0.8s;
+    user-select: none;
 
     & > div {
         position: absolute;
